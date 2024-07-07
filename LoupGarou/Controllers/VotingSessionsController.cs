@@ -54,7 +54,7 @@ namespace LoupGarou.Controllers
         public async Task<ActionResult<VotingSession>> GetCurrentVotingSessionOfGame(Guid gameId)
         {
             VotingSession session = await voteService.GetGameCurrentVotingSession(gameId);
-            if (session == null) return NotFound("There is no active voting session, or there is more than one currently active");
+            if (session == null) return NotFound("There is no active voting session.");
             return Ok(session);
         }
 

@@ -70,7 +70,7 @@ namespace LoupGarou.Services
               .Include(g => g.Roles)
               .ThenInclude(r => r.Card)
               .Include(g => g.VotingSessions)
-              .ThenInclude(s=> s.Votes)
+              .ThenInclude(s => s.Votes)
               .ToListAsync();
             return allGames;
         }
@@ -100,7 +100,7 @@ namespace LoupGarou.Services
               .FirstOrDefaultAsync(g => g.GameCode == code);
             return game;
         }
-        
+
         public async Task DeleteGame(Guid id)
         {
             var game = await _loupGarouDbContext.Games.FindAsync(id);
@@ -117,28 +117,30 @@ namespace LoupGarou.Services
             }
             await _loupGarouDbContext.SaveChangesAsync();
         }
-        
+
         public async Task<Game> AssignRolesToPlayers(Guid gameId)
         {
             Game game = await GetGame(gameId);
             if (game == null) return null;
-            
-            if (game.Roles.Count == game.Players.Count)
+            if (game.CurrentPhase == GameConstants.JOIN_LOBBY)
             {
-                List<Role> rolesList = Shuffle(game.Roles.ToList());
-                
-                for (int i = 0; i < rolesList.Count; i++)
+                if (game.Roles.Count == game.Players.Count)
                 {
-                    game.Players[i].RoleId = rolesList[i].RoleId;
+                    List<Role> rolesList = Shuffle(game.Roles.ToList());
+
+                    for (int i = 0; i < rolesList.Count; i++)
+                    {
+                        game.Players[i].RoleId = rolesList[i].RoleId;
+                    }
+                    game.CurrentPhase = GameConstants.ASSIGN_ROLES;
+                    _loupGarouDbContext.Entry(game).State = EntityState.Modified;
+                    await _loupGarouDbContext.SaveChangesAsync();
+                    return game;
                 }
-                game.CurrentPhase = GameConstants.ASSIGN_ROLES;
-                _loupGarouDbContext.Entry(game).State = EntityState.Modified;
-                await _loupGarouDbContext.SaveChangesAsync();
-                return game;
             }
             return null;
         }
-        
+
         public async Task AddPlayer(Player newPlayer)
         {
             var game = await GetGame(newPlayer.GameId);

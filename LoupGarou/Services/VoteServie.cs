@@ -27,6 +27,10 @@ namespace LoupGarou.Services
             Game game = await gameService.GetGame(request.GameId);
             if (game == null) return null;
 
+
+            // A game should have ony one active votingSession, so we close all game's previous votingSessions
+            await SetManyVotingSessionCompleted(game.VotingSessions.ToList());
+
             VotingSession session = new VotingSession()
             {
                 VotingSessionId = new Guid(),
@@ -103,7 +107,14 @@ namespace LoupGarou.Services
 
             return vote;
         }
-
+        public async Task SetManyVotingSessionCompleted(List<VotingSession> sessions)
+        {
+            if (sessions.IsNullOrEmpty()) return;
+            foreach (var session in sessions)
+            {
+                await SetVotingSessionCompleted(session);
+            }
+        }
         public async Task SetVotingSessionCompleted(VotingSession session)
         {
             if (session == null) return;
@@ -118,6 +129,7 @@ namespace LoupGarou.Services
 
         private Guid GetVotesResult(IList<Vote> votes)
         {
+            if (votes.IsNullOrEmpty()) return Guid.Empty;
             Dictionary<Guid, int> results = new Dictionary<Guid, int>();
             foreach (var vote in votes)
             {
