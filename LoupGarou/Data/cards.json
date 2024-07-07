@@ -1,0 +1,22 @@
+[
+  {
+    "cardName": "Werewolf",
+    "description": "Werewolves work together to kill all the village. They choose a player to kill every night, and they pretend to be villagers during the day.",
+    "imageName": "werewolf"
+  },
+  {
+    "cardName": "Villager",
+    "description": "This role has no superpowers, sleeping all night and only votes during the day.",
+    "imageName": "villager"
+  },
+  {
+    "cardName": "Protector",
+    "description": "The protector chooses a player to protect from the werewolves every night. He can protect himself, and he cannot protect the same player twice in a row.",
+    "imageName": "protector"
+  },
+  {
+    "cardName": "Witch",
+    "description": "The witch has two potions: one that can heal the werewolves' target, the other that can kill any player.",
+    "imageName": "witch"
+  }
+]

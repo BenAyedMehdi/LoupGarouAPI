@@ -23,11 +23,27 @@ namespace LoupGarou.Controllers
         public async Task<ActionResult<string>> Post([FromBody] CreateCardRequest request)
         {
             if (request == null || request.CardName.IsNullOrEmpty()) return BadRequest($"Please send a valid request");
-            Card? card= await cardService.CreateCard(request);
+            Card? card = await cardService.CreateCard(request);
             if (card == null) return BadRequest("Unknown error");
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
             var getUrl = baseUrl + "/api/cards/" + card.CardId;
             return Created(getUrl, card);
+        }
+
+        // The request body can be retreived from Data/cards.json
+        [HttpPost("many")]
+        public async Task<ActionResult<string>> PostMany([FromBody] List<CreateCardRequest> request)
+        {
+                if (request.IsNullOrEmpty()) return BadRequest($"Please send a valid request");
+            
+            foreach(var cardRequest in request)
+            {
+                if (cardRequest == null || cardRequest.CardName.IsNullOrEmpty()) return BadRequest($"Each card must have a name. Please verify your request.");
+                Card? card = await cardService.CreateCard(cardRequest);
+                if (card == null) return BadRequest("A card couldn't be created.");
+            }
+
+            return Ok("All the cards were added successfully.");
         }
 
         [HttpGet]
