@@ -7,6 +7,7 @@
 ## Game Description
 - **Title**: Werewolf (Loup Garou)
 - **Gameplay**: A social deduction game with day and night phases. Players are assigned as villagers or werewolves and engage in a strategic battle of wits. Special roles with unique abilities add complexity to the game.
+-  [Check the frontend repository](https://github.com/BenAyedMehdi/LoupGarouReact/tree/develop) 
 
 ## Project Goals
 - Develop a software solution to automate game mechanics, replacing the traditional narrator.
