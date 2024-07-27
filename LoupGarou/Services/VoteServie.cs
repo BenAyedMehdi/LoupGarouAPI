@@ -103,9 +103,23 @@ namespace LoupGarou.Services
             if(session.ExpectedVotesCount == session.Votes.Count)
             {
                 await SetVotingSessionCompleted(session);
+                if(session.VotingSessionType == "chief")
+                    await SetPlayerAsVillageCheif(session.Result);
             }
 
             return vote;
+        }
+        private async Task SetPlayerAsVillageCheif(Guid playerId)
+        {
+            if (playerId == Guid.Empty) return;
+            
+            var player= await loupGarouDbContext.Players.FirstOrDefaultAsync(p => p.PlayerId == playerId);
+            if (player == null) return;
+            
+            player.IsCheif = true;
+
+            loupGarouDbContext.Entry(player).State = EntityState.Modified;
+            await loupGarouDbContext.SaveChangesAsync();
         }
         public async Task SetManyVotingSessionCompleted(List<VotingSession> sessions)
         {

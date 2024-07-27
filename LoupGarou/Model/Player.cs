@@ -7,6 +7,7 @@ namespace LoupGarou.Model
         public Guid PlayerId { get; set; }
         public string Name { get; set; }
         public Guid RoleId { get; set; }
+        public bool IsCheif { get; set; } = false;
         public bool IsProtected { get; set; } = false;
         public bool IsLover { get; set; } = false;
         public string Status { get; set; } = "alive";
