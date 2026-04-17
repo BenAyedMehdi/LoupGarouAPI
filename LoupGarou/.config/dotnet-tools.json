@@ -6,7 +6,15 @@
       "version": "6.2.3",
       "commands": [
         "swagger"
-      ]
+      ],
+      "rollForward": false
+    },
+    "dotnet-ef": {
+      "version": "8.0.7",
+      "commands": [
+        "dotnet-ef"
+      ],
+      "rollForward": false
     }
   }
 }
