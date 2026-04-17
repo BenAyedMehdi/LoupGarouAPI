@@ -4,6 +4,7 @@ using LoupGarou.Services.Interfaces;
 using LoupGarou.Services;
 using System.Reflection;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -59,5 +60,11 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<LoupGarouDbContext>();
+    db.Database.Migrate();
+}
 
 app.Run();
