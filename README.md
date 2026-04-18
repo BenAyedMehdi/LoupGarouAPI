@@ -59,3 +59,52 @@ Welcome to the Werewolf Role Distributor! This web application simplifies the se
 - Handling a large player base efficiently.
 - Customization for varied game requirements.
 - Maintaining reliability and consistency in gameplay.
+
+---
+
+## Docker Setup
+ 
+The full stack is orchestrated from the [LoupGarouInfra](https://github.com/Njoura7/LoupGarouInfra) repository. **You do not need to run anything inside this repo to get it running** — just make sure the folder structure below is in place and follow the instructions in `LoupGarouInfra`.
+ 
+### Prerequisites
+ 
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running
+- This repo, [LoupGarouReact](https://github.com/BenAyedMehdi/LoupGarouReact), and [LoupGarouInfra](https://github.com/Njoura7/LoupGarouInfra) all cloned side by side:
+```
+projects/
+├── LoupGarouAPI/       ← this repo
+├── LoupGarouReact/
+└── LoupGarouInfra/
+```
+ 
+### Start the full stack
+ 
+```bash
+cd LoupGarouInfra
+docker compose up --build
+```
+ 
+Once all containers are green in Docker Desktop:
+ 
+| Service | URL |
+|---|---|
+| API + Swagger | `http://localhost:8080` |
+| Frontend | `http://localhost:3000` |
+ 
+### Zero manual setup — migrations and seeding are fully automatic
+ 
+> **You do not need to run any migration or database commands.** The API handles everything itself the moment it boots inside Docker.
+ 
+On every fresh start against an empty database, the API automatically runs all pending EF Core migrations in order and seeds the required game cards into the database before accepting any requests. EF Core tracks which migrations have already been applied, so restarting the stack never re-runs them or duplicates any data. The database is always in the correct state without any developer intervention.
+ 
+### Stopping the stack
+ 
+```bash
+docker compose down
+```
+ 
+To fully reset including all database data:
+ 
+```bash
+docker compose down -v
+```
