@@ -1,8 +1,8 @@
 # Build stage
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy csproj and restore dependencies first (better layer caching)
+# Copy csproj and restore dependencies first (better caching)
 COPY ["LoupGarou/LoupGarou.csproj", "LoupGarou/"]
 RUN dotnet restore "LoupGarou/LoupGarou.csproj"
 
@@ -16,8 +16,10 @@ FROM build AS publish
 RUN dotnet publish "LoupGarou.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # Final runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
+
 EXPOSE 8080
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "LoupGarou.dll"]
