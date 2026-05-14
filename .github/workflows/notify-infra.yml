@@ -1,0 +1,19 @@
+name: Notify Infra CI
+
+on:
+  push:
+    branches: [feature/docker-infra]
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger LoupGarouInfra CI
+        env:
+          TOKEN: ${{ secrets.INFRA_REPO_DISPATCH_TOKEN }}
+        run: |
+          curl -X POST \
+            -H "Authorization: token $TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/BenAyedMehdi/LoupGarouInfra/dispatches \
+            -d '{"event_type":"external-repo-push"}'
